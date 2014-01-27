@@ -1,0 +1,46 @@
+body {font-family:Verdana, Geneva, sans-serif;font-size:11px;line-height:1em;color:#000;min-width:1322px}
+body textarea{font-family:Verdana, Geneva, sans-serif;font-size:10px; width:200px;}
+body p {text-align: left; text-justify: distribute;}
+.header{height:150px;width:1358px;background-image:url(../images/header.jpg); background-repeat: no-repeat;}
+.menu{padding: 25px 25px 0px 0px;}
+.cuerpo{width:1200px;margin: 0px 0px 0px 30px; font-size:12px;}
+.cuerpo h3 {text-align: left;}
+.cuerpo h2 {text-align: left;}
+
+.formulario label{font-size:10px;}
+.formulario input{height:20px; width:150px; font-size:10px}
+.formulario select{height:20px; width:150px; font-size:10px}
+
+.opciones{background-color:#14B300;height:18px; width:1328px; padding: 1px 0px 0px 0px;background-repeat: no-repeat;}
+.opciones ul{margin-top:0px; padding-left:10px;}
+.opciones ul li {list-style-type:none;font-size:10px;line-height:1.2em;float:left; margin: 1px 6px 1px 6px;}
+.opciones ul li a {font-size:10px;display:block;color:#FFF;text-decoration:none; font-weight:bold}
+.opciones ul li a:hover {font-size:10px;display:block;background-color:#F00;text-decoration:none}
+
+h2 {font-size:14px;}
+h2 span, h2 b {font-family:Verdana, Geneva, sans-serif; color:#EC1F24}
+h3 {font-size:16px;}
+h3 span, h3 b {font-family:Verdana, Geneva, sans-serif; color:#EC1F24}
+
+.fright {padding-top:55px; margin-left:500px}
+.fright ul li {list-style-type:none;line-height:1.2em;float:left;margin-left:1px}
+.fright ul li a {font-size:12px;display:block;color:#fff;text-decoration:none}
+.fright ul li a em {display:block}
+.fright ul li a b {display:block;font-style:normal;font-weight:bold;padding:3px 15px 3px 15px}
+.fright ul li a:hover, #header .row-1 .fright ul li a.active {background-color:#15B300;color: red;}
+
+.celda{ background-color:ffffff; border-style:solid; border-color:#0C3; border-width:1px;}
+.boton{ background-color:FFF; font-weight:bold;}
+
+div.message{
+    background: transparent url(../images/msg_arrow.gif) no-repeat scroll left center;
+    padding-left: 7px;
+}
+
+div.error{
+    background-color:#F3E6E6;
+    border-color: #924949;
+    border-style: solid solid solid none;
+    border-width: 2px;
+    padding: 5px;
+}

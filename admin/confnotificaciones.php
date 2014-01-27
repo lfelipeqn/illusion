@@ -1,0 +1,1 @@
+<div>Se ha realizado la actualizacion de las Notificaciones. A partir de este momento se enviar&aacute;n notificaciones a los usuarios seleccionados </div>

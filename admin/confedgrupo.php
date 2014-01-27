@@ -1,0 +1,1 @@
+<p>El Grupo ha sido Registrado correctamente, Para Asignar privilegios, Por favor dirijase a la Opci&oacute;n <a href="admin.php?location=privilegios">Administrar Privilegios</a></p>

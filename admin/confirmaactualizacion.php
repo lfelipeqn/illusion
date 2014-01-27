@@ -1,0 +1,1 @@
+<div>Se ha realizado la actualizacion de los privilegios seleccionados. Los privilegios ajustados han sido aplicados a los grupos seleccionados</div>

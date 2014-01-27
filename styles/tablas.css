@@ -1,0 +1,33 @@
+td {
+	font-family:verdana,arial;
+	font-size:8.5px;
+}
+.estilotabla{
+	background-color:ffffff;
+	border-style:solid;
+	border-color:666666;
+	border-width:1px;
+}
+.estilocelda{
+	background-color:#D19D01;
+	color:333333;
+	font-weight:bold;
+	font-size:8.5px;
+	font-size-adjust:inherit;
+}
+.pg-normal {
+	color: black;
+	font-weight: normal;
+	text-decoration: none;    
+	cursor: pointer;    
+}
+.pg-selected {
+	color: black;
+	font-weight: bold;        
+	text-decoration: underline;
+	cursor: pointer;
+}
+.brief{
+	color:#0000FF;
+	font-size:8.5px;
+}

@@ -1,0 +1,733 @@
+<?
+
+if(isset($_SESSION['usuario'])){
+	include('../Connections/cnn.php');
+	$proveedor=$_SESSION['usuario'];
+	$conect=mysql_select_db($database_cnn,$cnn);
+    
+   $sql="SELECT proveedores.NombreProveedor, proveedores.Fecha, proveedores.Identificacion, proveedores.DV, proveedores.NombreComercial, 
+   proveedores.Ciudad, proveedores.Pais, proveedores.Direccion, proveedores.Fax, proveedores.Telefono, proveedores.Correo, proveedores.Actividad,
+   proveedores.Representante, proveedores.IdentRep, proveedores.IdTipoP, tipoidentificacion.TipoIdentificacion, tipoidentificacion.IdTipo,
+   tipopersona.IdPersona, tipopersona.Persona, proveedores.IVA, proveedores.ReteIva, proveedores.ReteIca, proveedores.ReteFte, proveedores.Movil, proveedores.CorreoAlterno 
+   FROM proveedores 
+   LEFT JOIN tipoidentificacion ON proveedores.TipoIdentificacion = tipoidentificacion.IdTipo 
+   LEFT JOIN tipopersona ON proveedores.TipoPersona = tipopersona.IdPersona 
+   WHERE proveedores.Identificacion=".$proveedor;
+   
+	$consulta=mysql_query($sql,$cnn) or die(mysql_error());
+	$rsprov=mysql_fetch_assoc($consulta);
+    
+   $sqltrib="SELECT tributariaproveedores.IdProveedor, tributariaproveedores.Contribuyente, tributariaproveedores.IVA, tributariaproveedores.Autoretenedor, tributariaproveedores.ICA,
+   tributariaproveedores.CodActividad, tributariaproveedores.CIIU, tributariaproveedores.AutoretenedorICA, tributariaproveedores.Tarifa, tributariaproveedores.ResolucionGran,
+   tributariaproveedores.FechaGran, tributariaproveedores.ResolucionAuto, tributariaproveedores.FechaAuto, tiporegimen.IdRegimen, tiporegimen.Regimen, 
+   tributariaproveedores.CodActividad2, tributariaproveedores.CodActividad3 
+   FROM tributariaproveedores 
+   LEFT JOIN tiporegimen ON tributariaproveedores.IdRegimen = tiporegimen.IdRegimen 
+   WHERE tributariaproveedores.IdProveedor='".$proveedor."'";
+   
+	$clttrib=mysql_query($sqltrib,$cnn) or die(mysql_error());
+	$rstrib=mysql_fetch_assoc($clttrib);
+
+	$sqlpagos="SELECT pagosproveedores.IdProveedor, tipopago.IdPago, tipopago.TipoPago, pagosproveedores.Cuenta, 
+    tipocuentas.IdTipo, tipocuentas.TipoCuenta, pagosproveedores.Entidad, pagosproveedores.Contacto, pagosproveedores.EmailContacto 
+    FROM pagosproveedores 
+    LEFT JOIN tipocuentas ON pagosproveedores.TipoCuenta = tipocuentas.IdTipo 
+    LEFT JOIN tipopago ON tipopago.IdPago = pagosproveedores.IdPago 
+    WHERE pagosproveedores.IdProveedor='".$proveedor."'";
+	
+	$cltpagos=mysql_query($sqlpagos,$cnn) or die(mysql_error());
+	$rspagos=mysql_fetch_assoc($cltpagos);
+
+	$sqlvinculo="SELECT vinculoproveedor.IdProveedor, vinculoproveedor.Descuento, vinculoproveedor.Observaciones, plazopago.IdPlazo, plazopago.Plazo, tipoproveedor.TipoProveedor, tipoproveedor.IdTipoP FROM vinculoproveedor LEFT JOIN plazopago ON vinculoproveedor.FormaPago = plazopago.IdPlazo LEFT JOIN tipoproveedor ON vinculoproveedor.TipoProveedor = tipoproveedor.IdTipoP WHERE vinculoproveedor.IdProveedor='".$proveedor."'";	
+	$cltvinculo=mysql_query($sqlvinculo,$cnn) or die(mysql_error());
+	$rsvinculo=mysql_fetch_assoc($cltvinculo);
+?>
+    
+<h3>Actualización de Datos Proveedor</h3>
+<form id="actproveedor" name="actproveedor" action="" method="post">
+	<div id="tabs">
+		<ul>
+			<li style="font-size: 12px;"><a href="#tabs-1">Información Proveedor</a></li>
+			<li style="font-size: 12px;"><a href="#tabs-2">Información Tributaria</a></li>
+			<li style="font-size: 12px;"><a href="#tabs-3">Información Pagos</a></li>
+			<li style="font-size: 12px;"><a href="#tabs-4">Información Compañía</a></li>
+		</ul>
+    	<div id="tabs-1">
+			<table>
+				<tr><td colspan="6"></td></tr>
+            <tr>
+                <td><label> Persona </label></td>
+                <td>
+               <? 
+				  	$sqlpersona="SELECT tipopersona.IdPersona, tipopersona.Persona FROM tipopersona";
+					$cltpersonas=mysql_query($sqlpersona,$cnn) or die(mysql_error());
+					$x=0;
+					while ($rspersona=mysql_fetch_assoc($cltpersonas)){
+						$x++;
+						if($rspersona['IdPersona']==$rsprov['IdPersona']){
+							echo'<label><input type="radio" id="ntpersona'.$x.'" name="ntpersona" checked="checked" value="'.$rspersona['IdPersona'].'"/>'.$rspersona['Persona'].'</label>';
+						}else{
+							echo'<label><input type="radio" id="ntpersona'.$x.'" name="ntpersona" value="'.$rspersona['IdPersona'].'"/>'.$rspersona['Persona'].'</label>';
+						}
+					}
+               ?>
+            	</td>
+            </tr>
+            <tr>
+	            <td><label> Nombre o Raz&oacute;n Social </label></td>
+                <td>
+                <?
+				  		echo '<input type="hidden" id="idproveedor" name="idproveedor" value="'. $proveedor.' "/>';
+				  		$nombrep = $rsprov['NombreProveedor'];
+				  		echo '<input id="nproveedor" name="nproveedor" type="text" size="37" value="'.$nombrep.'"/>';
+				  	?>
+				</td>
+	            <td><label> Nombre Comercial </label></td>
+	            <td>
+	            <?
+	            $ncomer=$rsprov['NombreComercial'];
+               echo '<input type="text" id="ncomercial" name="ncomercial" size="37" value="'.$ncomer.'"/>';
+               ?>
+               </td>
+            </tr>
+            <tr>
+				<td><label> Tipo Identificacion </label></td>
+                <td>
+					<select id="tipoi" name="tipoi">
+                    <option value="0">--- Tipo de Identificaci&oacute;n---</option>
+                    <?
+					   	$sqliden="SELECT tipoidentificacion.IdTipo, tipoidentificacion.TipoIdentificacion FROM tipoidentificacion";
+					   	$cltiden=mysql_query($sqliden,$cnn) or die(mysql_error());
+					   	while($rsiden=mysql_fetch_assoc($cltiden)){
+					      	if($rsiden['IdTipo']==$rsprov['IdTipo']){
+					         	echo '<option value="'.$rsiden['IdTipo'].'" selected="selected">'.$rsiden['TipoIdentificacion'].'</option>';
+	                     }else{
+									echo '<option value="'.$rsiden['IdTipo'].'">'.$rsiden['TipoIdentificacion'].'</option>';	
+					       	}
+					   	}
+					   	?>
+					</select>
+	           </td>
+	           <td><label> Identificacion </label></td>
+                <td>
+                <?
+                	echo '<label><input id="nnit" name="nnit" type="text" size="24" value="'.$rsprov['Identificacion'].'"/> DV <input id="ndv" name="ndv" type="text" size="5" value="'.$rsprov['DV'].'"/></label>';
+                ?>
+                </td>
+            </tr>
+            <tr>
+	            <td><label>Ciudad</label></td>
+	            <td>
+	            <?
+	            	echo '<input id="nciudad" name="nciudad" type="text" size="37" value="'.$rsprov['Ciudad'].'"/>';
+	            ?>
+	            </td>
+	            <td><label>Pa&iacute;s</label></td>
+               <td>
+               <?
+               	echo '<input type="text" id="npais" name="npais" size="37" value="'.$rsprov['Pais'].'"/>';
+               ?>
+               </td>
+             </tr>
+             <tr>
+	            <td><label>Direcci&oacute;n</label></td>
+	            <td>
+	            <?
+	            	echo '<input id="ndir" name="ndir" type="text" size="37" value="'.$rsprov['Direccion'].'"/>';
+	            ?>
+	            </td>
+	            <td><label>Fax</label></td>
+               <td>
+               <?
+               	echo'<input type="text" id="npfax" name="npfax" size="37" value="'.$rsprov['Fax'].'"/>';
+               ?>
+               </td>
+            </tr>
+            <tr>
+	            <td><label>Tel&eacute;fono</label></td>
+	            <td>
+	            <?
+	            	echo '<input id="ntel" name="ntel" type="text" size="37" value="'.$rsprov['Telefono'].'"/>';
+	            ?>
+	            </td>
+	            <td><label>M&oacute;vil</label></td>
+	            <td>
+					<?	            
+	            	echo '<input id="ncelu" name="ncelu" type="text" size="37" value="'.$rsprov['Movil'].'"/>';
+	            ?>
+	            </td>
+            </tr>
+            <tr>
+	            <td><label>E-Mail</label></td>
+               <td>
+               	<?
+               	echo '<input type="text" id="ncorreo" name="ncorreo" size="37" value="'.$rsprov['Correo'].'"/>';
+               	?>
+               </td>
+               <td><label>E-Mail Alterno</label></td>
+               <td>
+               	<?
+               	echo '<input type="text" id="ncorreo2" name="ncorreo2" size="37" value="'.$rsprov['CorreoAlterno'].'"/>';
+               	?>
+               </td>
+            </tr>
+            <tr>
+	            <td><label>Representante Legal</label></td>
+	            <td>
+	            	<?
+	            	$repres=utf8_decode($rsprov['Representante']);	            	
+	            	echo '<input id="nrepl" name="nrepl" type="text" size="37" value="'.$repres.'"/>';
+	            	?>
+	            </td>
+	            <td><label>c.c.</label></td>
+               <td>
+               	<?
+               	echo '<input type="text" id="ncc" name="ncc" size="37" value="'.$rsprov['IdentRep'].'"/>';
+               	?>
+               </td>
+            </tr>
+        </table>
+        <div align="right">
+            <input type="image" id="check1" name="check1" src="images/upload.png" />
+        </div>
+    </div>
+    <div id="tabs-2">
+        <table>
+            <tr>
+            	<td><label>Tipo de Régimen</label></td>
+					<td>
+						<select id="tiporg" name="tiporg">
+							<option value="">--- Tipo de R&eacute;gimen---</option>
+							<?
+							$sqlreg="SELECT tiporegimen.IdRegimen, tiporegimen.Regimen FROM tiporegimen";
+							$cltreg=mysql_query($sqlreg,$cnn) or die(mysql_error());
+							while($rsreg=mysql_fetch_assoc($cltreg)){
+								if($rsreg['IdRegimen']==$rstrib['IdRegimen']){
+									echo '<option value="'.$rsreg['IdRegimen'].'" selected="selected">'.$rsreg['Regimen'].'</option>';
+								}else{
+									echo '<option value="'.$rsreg['IdRegimen'].'">'.$rsreg['Regimen'].'</option>';	
+								}
+							}
+							?>
+						</select>
+					</td>
+				</tr>	
+				<tr>
+					<td><div align="left">&nbsp;Gran Contribuyente&nbsp;</div></td>
+					<td>&nbsp;SI&nbsp;
+						<?
+						if($rstrib['Contribuyente']=='SI'){
+							echo '<input type="radio" id="ntcontrib1" name="ntcontrib" value="SI" checked="checked"/>&nbsp;NO&nbsp;<input type="radio" id="ntcontrib2" name="ntcontrib" value="NO"/>';	
+						}else if($rstrib['Contribuyente']=='NO'){
+							echo '<input type="radio" id="ntcontrib1" name="ntcontrib" value="SI" />&nbsp;NO&nbsp;<input type="radio" id="ntcontrib2" name="ntcontrib" value="NO" checked="checked"/>';
+						}else{
+							echo '<input type="radio" id="ntcontrib1" name="ntcontrib" value="SI"/>&nbsp;NO&nbsp;<input type="radio" id="ntcontrib2" name="ntcontrib" value="NO"/>';
+						}
+						?>
+					</td>
+					<td><label id="lbresgran" name="lbresgran" >Resolución</label></td>
+					<td>
+						<?
+						echo '<input type="text" id="resgran" name="resgran" value="'.$rstrib['ResolucionGran'].'" />';
+						?>
+					</td>
+					<td><label id="lbfecgran" name="lbfecgran">Fecha</label></td>
+					<td>
+						<?
+						echo '<input type="text" class="tcal" id="fecgran" name="fecgran" READONLY value="'.$rstrib['FechaGran'].'" />';
+						?>
+					</td>
+				</tr>
+				<tr>
+					<td><div align="left">&nbsp;Autoretendedor&nbsp;</b></div></td>
+					<td>
+						<div align="left">&nbsp;SI&nbsp;
+						<?
+						if($rstrib['Autoretenedor']=='SI'){
+							echo '<input type="radio" id="naret1" name="naret" value="SI" checked="checked"/>&nbsp;NO&nbsp;<input type="radio" id="naret2" name="naret" value="NO"/>';	
+						}else if($rstrib['Autoretenedor']=='NO'){
+							echo '<input type="radio" id="naret1" name="naret" value="SI"/>&nbsp;NO&nbsp;<input type="radio" id="naret2" name="naret" value="NO" checked="checked"/>';
+						}else{
+							echo '<input type="radio" id="naret1" name="naret" value="SI"/>&nbsp;NO&nbsp;<input type="radio" id="naret2" name="naret" value="NO"/>';
+						}
+						?>
+						</div>
+					</td>
+					<td><label id="lbresauto">Resolución</label></td>
+					<td>
+						<?	
+						echo '<input type="text" id="resauto" name="resauto" value="'.$rstrib['ResolucionAuto'].'" />';
+						?>
+					</td>
+					<td><label id="lbfecauto">Fecha</label></td>
+					<td>
+						<?
+						echo '<input type="text" class="tcal" READONLY id="fecauto" name="fecauto" value="'.$rstrib['FechaAuto'].'" />';
+						?>
+					</td>
+				</tr>
+				<tr>
+					<td><div align="left">&nbsp;Responsable de IVA&nbsp;</div></td>
+					<td>&nbsp;SI&nbsp;
+					<?
+					if($rstrib['IVA']=='SI'){
+						echo '<input type="radio" id="niva1" name="niva" value="SI" checked="checked"/>&nbsp;NO&nbsp;<input type="radio" id="niva2" name="niva" value="NO"/>';	
+					}else if($rstrib['IVA']=='NO'){
+						echo '<input type="radio" id="niva1" name="niva" value="SI"/>&nbsp;NO&nbsp;<input type="radio" id="niva2" name="niva" value="NO" checked="checked"/>';
+					}else{
+						echo '<input type="radio" id="niva1" name="niva" value="SI"/>&nbsp;NO&nbsp;<input type="radio" id="niva2" name="niva" value="NO"/>';
+					}
+					?>
+					</td>
+				</tr>
+				<tr>
+					<td><div align="left">&nbsp;Responsable ICA&nbsp;</div></td>
+					<td>&nbsp;SI&nbsp;
+					<?
+					if($rstrib['ICA']=='SI'){
+						echo '<input type="radio" id="nica1" name="nica" value="SI" checked="checked"/>&nbsp;NO&nbsp;<input type="radio" id="nica2" name="nica" value="NO"/>';	
+					}else if($rstrib['ICA']=='NO'){
+						echo '<input type="radio" id="nica1" name="nica" value="SI"/>&nbsp;NO&nbsp;<input type="radio" id="nica2" name="nica" value="NO" checked="checked"/>';
+					}else{
+						echo '<input type="radio" id="nica1" name="nica" value="SI"/>&nbsp;NO&nbsp;<input type="radio" id="nica2" name="nica" value="NO"/>';
+					}
+					?>
+					</td>
+				</tr>
+				<tr>
+					<td><label>% Tarifa IVA: </label></td>
+					<td>
+						<?
+						echo '<input type="text" id="tiva" name="tiva" maxlength="8" value="'.($rsprov['IVA']*100).'"/>';
+						?>
+					</td>
+					<td><label>% Tarifa ICA: </label></td>
+					<td>
+						<?
+						echo '<input type="text" id="trica" name="trica" maxlength="8" value="'.($rsprov['ReteIca']*100).'"/>';
+						?>
+					</td>
+					<td><label>% Rete FUENTE: </label></td>
+					<td>
+						<?
+						echo '<input type="text" id="trfte" name="trfte" maxlength="8" value="'.($rsprov['ReteFte']*100).'"/>';
+						?>
+					</td>
+				</tr>                    
+            <tr>
+                <td><label>C&oacute;digo Actividad Principal</label></td>
+                <td>
+                	<?
+                	echo '<input type="text" id="ncodac" name="ncodac" value="'.$rstrib['CodActividad'].'"/>';
+                	?>
+                </td>
+                <td><label>C&oacute;digo Actividad 2</label></td>
+                <td>
+                	<?
+                	echo '<input type="text" id="ncodac2" name="ncodac2" value="'.$rstrib['CodActividad2'].'"/>';
+                	?>
+                </td>
+                <td><label>C&oacute;digo Actividad 3</label></td>
+                <td>
+                	<?
+                	echo '<input type="text" id="ncodac3" name="ncodac3" value="'.$rstrib['CodActividad3'].'"/>';
+                	?>
+                </td>
+            </tr>
+            <tr>
+                <td><label>C&oacute;digo CIIU</label></td>
+                <td>
+                	<?
+                	echo '<input type="text" id="nciiu" name="nciiu" value="'.$rstrib['CIIU'].'"/>';
+                	?>
+                </td>
+            </tr>
+        </table>
+        <div align="right">
+            <input type="image" id="check1" name="check1" src="images/upload.png" />
+        </div>
+    </div>
+    <div id="tabs-3">
+        <table>
+            <tr>
+                <td><label>Tipo</label></td>
+                <td>
+                <?
+                $sqlcuentas="SELECT tipocuentas.IdTipo, tipocuentas.TipoCuenta FROM tipocuentas";
+                $cltcuentas=mysql_query($sqlcuentas,$cnn) or die(mysql_error());
+                $k=0;
+                while($rscuentas=mysql_fetch_assoc($cltcuentas)){
+                    $k++;
+                    if($rscuentas['IdTipo']==$rspagos['IdTipo']){
+                        echo '<label><input type="radio" id="ntipoc'.$k.'" name="ntipoc" checked="checked" value="'.$rscuentas['IdTipo'].'"/>'.$rscuentas['TipoCuenta'].'</label>';
+                    }else{
+                        echo '<label><input type="radio" id="ntipoc'.$k.'" name="ntipoc" value="'.$rscuentas['IdTipo'].'"/>'.$rscuentas['TipoCuenta'].'</label>';
+                    }
+                }
+                ?>
+                </td>
+                <td><label>Cuenta No.</label></td>
+                <td>
+                	<?
+                	echo '<input id="ncuenta" name="ncuenta" type="text" value="'.$rspagos['Cuenta'].'"/>';
+                	?>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Entidad</label></td>
+                <td>
+                	<?
+                	echo '<input id="nentidad" name="nentidad" type="text" value="'.$rspagos['Entidad'].'"/>';
+                	?>
+                </td>
+                <td><label>Email de Contacto para Pagos </label></td>
+                <td>
+                	<?
+                	echo '<input id="nmailcontacto" name="nmailcontacto" type="text" value="'.$rspagos['EmailContacto'].'"/>';
+                	?>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Persona de Contacto para Pagos </label></td>
+                <td colspan="3">
+                	<?
+                	echo '<input id="npcontacto" name="npcontacto" type="text" size="80" value="'.$rspagos['Contacto'].'"/>';
+                	?>
+                </td>
+            </tr>
+        </table>
+        <div align="right">
+            <input type="image" id="check1" name="check1" src="images/upload.png" />
+        </div>
+    </div>
+    <div id="tabs-4">
+        <table>
+            <tr>
+                <td><label>Tipo de Proveedor</label></td>
+                <td><table>
+                	<?
+                    $sqltprov="SELECT tipoproveedor.IdTipoP, tipoproveedor.TipoProveedor FROM tipoproveedor";
+                    $clttprov=mysql_query($sqltprov,$cnn) or die(mysql_error());
+                    $l=1;
+                    echo '<tr>';
+                    while($rstprov=mysql_fetch_assoc($clttprov)){
+                        if($rstprov['IdTipoP']==$rsprov['IdTipoP']){
+                            echo '<td><label><input type="radio" id="ntipop'.$l.'" name="ntipop" value="'.$rstprov['IdTipoP'].'" checked="checked"/>'.$rstprov['TipoProveedor'].'</label></td>';
+                        }else{
+                            echo '<td><label><input type="radio" id="ntipop'.$l.'" name="ntipop" value="'.$rstprov['IdTipoP'].'"/>'.$rstprov['TipoProveedor'].'</label></td>';
+                        }
+                        if ($l%3 == 0){
+                            echo '</tr><tr>';
+                        }
+                        $l++;
+                    }
+                    ?>
+                </tr></table></td>
+            </tr>
+            <tr>
+                <td><label>Forma de Pago</label></td>
+                <td>
+                <?
+                    $sqlforma="SELECT plazopago.IdPlazo, plazopago.Plazo FROM plazopago";
+                    $cltforma=mysql_query($sqlforma,$cnn) or die(mysql_error());
+                    $m=0;
+                    while($rsforma=mysql_fetch_assoc($cltforma)){
+                        $m++;
+                        if($rsforma['IdPlazo']==$rsvinculo['IdPlazo']){
+                            echo '<label><input type="radio" id="nfpago'.$m.'" name="nfpago" value="'.$rsforma['IdPlazo'].'" checked="checked" onclick="PagoNormal()"/>'.$rsforma['Plazo'].'</label>';
+                        }else{
+                            echo '<label><input type="radio" id="nfpago'.$m.'" name="nfpago" value="'.$rsforma['IdPlazo'].'" onclick="PagoNormal()"/>'.$rsforma['Plazo'].'</label>';
+                        }
+                    }
+                 ?>
+            	  </td></tr>
+            <tr><td><label>Descuento por pronto Pago</label></td>
+                <td>
+                <?
+                    if($rsvinculo['Descuento']=='SI'){
+                        echo '<label><input type="radio" id="ndprontop1" name="ndprontop" value="SI" checked="checked"/>SI</label>
+                        <label><input type="radio" id="ndprontop2" name="ndprontop" value="NO"/>NO</label>';
+                    }else if($rsvinculo['Descuento']=='NO'){
+                        echo '<label><input type="radio" id="ndprontop1" name="ndprontop" value="SI"/>SI</label>
+                        <label><input type="radio" id="ndprontop2" name="ndprontop" value="NO" checked="checked"/>NO</label>';
+                    }else{
+                        echo '<label><input type="radio" id="ndprontop1" name="ndprontop" value="SI"/>SI</label>
+                        <label><input type="radio" id="ndprontop2" name="ndprontop" value="NO" />NO</label>';
+                    }
+                ?>
+                </td>
+            </tr>
+            <tr>
+                <td><label>Observaciones o Comentarios</label></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                <?
+                	echo '<input name="npobservaciones" type="text" size="130" height="80" value="'.$rsvinculo['Observaciones'].'"/>';
+                ?>
+                </td>
+            </tr>
+        </table>
+        <div align="right">
+            <input type="image" id="check1" name="check1" src="images/upload.png" />
+        </div>
+    </div>
+</div>
+<!-- <div align="center"><input type="submit" value="Actualizar Informaci&oacute;n del Proveedor" style="width:820px; font-weight:bold;"/></div> -->
+</form>
+<script>
+   $(document).ready(function() {
+      $("#tabs").tabs();
+      if ($("#ntcontrib2").is(':checked')) {
+			$('#resgran').val("")       	
+       	$('#resgran').hide()
+       	$('#lbresgran').hide()
+       	$('#fecgran').val("")       	
+       	$('#fecgran').hide()
+       	$('#lbfecgran').hide()
+      }          
+		
+		if ($("#ntcontrib1").is(':checked')) {
+			//$('#resgran').val("")       	
+       	$('#resgran').show()
+       	$('#lbresgran').show()
+       	//$('#fecgran').val("")       	
+       	$('#fecgran').show()
+       	$('#lbfecgran').show()
+      }
+      
+      if ($("#naret2").is(':checked')) {
+			$('#resauto').val("")       	
+       	$('#resauto').hide()
+       	$('#lbresauto').hide()
+       	$('#fecauto').val("")       	
+       	$('#fecauto').hide()
+       	$('#lbfecauto').hide()
+      }          
+		
+		if ($("#naret1").is(':checked')) {       	
+       	$('#resauto').show()
+       	$('#lbresauto').show()       	
+       	$('#fecauto').show()
+       	$('#lbfecauto').show()
+      }      
+      
+   });
+   
+   $("#ntcontrib2").click(function(){
+   	if ($("#ntcontrib2").is(':checked')) {
+			$('#resgran').val("")       	
+       	$('#resgran').hide()
+       	$('#lbresgran').hide()
+       	$('#fecgran').val("")       	
+       	$('#fecgran').hide()
+       	$('#lbfecgran').hide()
+      }
+   })
+   
+	          
+	$("#ntcontrib1").click(function(){	
+		if ($("#ntcontrib1").is(':checked')) {
+			//$('#resgran').val("")       	
+       	$('#resgran').show()
+       	$('#lbresgran').show()
+       	//$('#fecgran').val("")       	
+       	$('#fecgran').show()
+       	$('#lbfecgran').show()
+      }
+  	})
+  
+  	$("#naret2").click(function(){
+ 		if ($("#naret2").is(':checked')) {
+			$('#resauto').val("")       	
+       	$('#resauto').hide()
+       	$('#lbresauto').hide()
+       	$('#fecauto').val("")       	
+       	$('#fecauto').hide()
+       	$('#lbfecauto').hide()
+      }
+  	})          
+	
+	$("#naret1").click(function(){	
+		if ($("#naret1").is(':checked')) {       	
+       	$('#resauto').show()
+       	$('#lbresauto').show()       	
+       	$('#fecauto').show()
+       	$('#lbfecauto').show()
+      }
+  	})
+      
+   $.validator.addMethod("valueNotEquals", function(value, element, arg){
+        return arg != value;
+    }, "Value must not equal arg.");   
+   
+   $(document).ready(function() {	            	            
+        $('#actproveedor').validate({
+            onfocusout: false,
+            onkeyup: false,
+            onclick: false,
+            onblur: false,	                
+            rules: {
+                'ntpersona': {required: true},
+                'nproveedor': {required: true},
+                'tipoi': {required: true},
+                'nnit': {required: true, number:true},
+                'nciudad': {required: true},
+                'npais': {required: true},
+                'ndir': {required: true},
+                'ntel': {required: true},
+                'ncelu': {required: true, number:true},
+                'ncorreo': {required: true, email:true},
+                'nrepl': {required: true},
+                'ncc': {required: true, number:true},
+                'tiporg': {required: true},
+                'ntcontrib': {required: true},
+                'naret': {required: true},
+                'niva': {required: true},
+                'nica': {required: true},
+                'tiva': {required: true, number: true},
+                'trica': {required: true, number: true},
+                'trfte': {required: true, number: true},
+                'ncodac': {required: true, number:true},
+                'nciiu': {required: true, number:true},
+                'ntipoc': {required: true},
+                'ncuenta': {required: true},
+                'nentidad': {required: true},
+                'nmailcontacto': {required: true, email:true},
+                'npcontacto': {required: true},
+                'ntipop': {required: true},
+                'nfpago': {required: true}
+            },
+            messages: {
+                'ntpersona': {required: " Elija el tipo de persona"},
+                'nproveedor': {required: " Ingrese el nombre del Proveedor"},
+                'tipoi': {required: " Elija Tipo de Identificacion"},
+                'nnit': {required: " Ingrese el Nit", number:" El Nit debe ser un número"},
+                'nciudad': {required: " Digite la Ciudad"},
+                'npais': {required: " Dgite el pais"},
+                'ndir': {required: " Registre la dirección"},
+                'ntel': {required: " Ingrese el telefono"},
+                'ncelu': {required: " Ingrese un Número movil", number:" El Móvil debe ser numero"},
+                'ncorreo': {required: " Ingrese Correo", email:" Digite un correo válido"},
+                'nrepl': {required: " Registre el Representante legal"},
+                'ncc': {required: " Digite la Cedula de Representante", number:" La cedula debe ser numero"},
+                'tiporg': {required: " Elija el Regimen"},
+                'ntcontrib': {required: " Es Gran Contribuyente?"},
+                'naret': {required: " Es Autoretenedor?"},
+                'niva': {required: " Es reponsable de IVA?"},
+                'nica': {required: " Es reponsable de ICA?"},
+                'tiva': {required: " Ingrese Tarifa IVA", number: " La Tarifa es numero"},
+                'trica': {required: " Ingrese Tarifa ICA", number: " La Tarifa es numero"},
+                'trfte': {required: " Ingrese Tarifa ReteFuente", number: " La Tarifa es numero"},
+                'ncodac': {required: " Digite Codigo de Actividad", number:" El codigo de actividad es numero"},
+                'nciiu': {required: " Digite el codigo CIIU", number:" El codigo CIIU es numero"},
+                'ntipoc': {required: " Elija el Tipo de Cuenta"},
+                'ncuenta': {required: " Digite el numero de cuenta"},
+                'nentidad': {required: " Digite su Entidad Financiera"},
+                'nmailcontacto': {required: " Registre Email Contacto", email:" Ingrese un email valido"},
+                'npcontacto': {required: " Contacto para pagos"},
+                'ntipop': {required: " Tipo de Proveedor"},
+                'nfpago': {required: " Plazo de Pago"}
+            },
+            debug: true,
+            submitHandler: function(form){
+            	var proveedor = $('[name="idproveedor"]').val()                
+               var ntpersona = $('[name="ntpersona"]').val()
+               var nproveedor = $('[name="nproveedor"]').val()
+               var ncomercial = $('[name="ncomercial"]').val()
+               var tipoi = $('[name="tipoi"]').val()
+               var nnit = $('[name="nnit"]').val()
+               var nciudad = $('[name="nciudad"]').val()
+               var npais = $('[name="npais"]').val()
+               var ndir = $('[name="ndir"]').val()
+               var npfax = $('[name="npfax"]').val()
+               var ntel = $('[name="ntel"]').val()
+               var ncelu = $('[name="ncelu"]').val()
+               var ncorreo = $('[name="ncorreo"]').val()
+               var ncorreo2 = $('[name="ncorreo2"]').val()               
+               var nrepl = $('[name="nrepl"]').val()
+               var ncc = $('[name="ncc"]').val()
+               var ntiporg = $('[name="tiporg"]').val()
+               var ntcontrib = $('[name="ntcontrib"]:checked').val()
+               var nresgran = $('[name="resgran"]').val()
+               var nfecgran = $('[name="fecgran"]').val()
+               var naret = $('[name="naret"]:checked').val()
+               var nresauto = $('[name="resauto"]').val()
+               var nfecauto = $('[name="fecauto"]').val()
+               var niva = $('[name="niva"]:checked').val()
+               var nica = $('[name="nica"]:checked').val()
+               var tiva = $('[name="tiva"]').val()
+               var trica = $('[name="trica"]').val()
+               var trfte = $('[name="trfte"]').val()
+               var ncodac = $('[name="ncodac"]').val()
+               var ncodac2 = $('[name="ncodac2"]').val()
+               var ncodac3 = $('[name="ncodac3"]').val()
+               var nciiu = $('[name="nciiu"]').val()
+               var ntipoc= $('[name="ntipoc"]').val()
+               var ncuenta = $('[name="ncuenta"]').val()
+               var nentidad = $('[name="nentidad"]').val()
+               var nmailcontacto = $('[name="nmailcontacto"]').val()
+               var npcontacto = $('[name="npcontacto"]').val()
+               var ntipop = $('[name="ntipop"]').val()
+               var nfpago = $('[name="nfpago"]').val()
+               var ndprontop = $('[name="ndprontop"]').val()
+               var npobservaciones = $('[name="npobservaciones"]').val()                  
+               
+               $.ajax({
+						type:"post",
+						url: "informacion/actualizaprov.php",
+						data:{
+							"proveedor":proveedor,                
+               		"ntpersona":ntpersona,
+               		"nproveedor":nproveedor,
+               		"ncomercial":ncomercial,
+               		"tipoi":tipoi,
+               		"nnit":nnit,
+               		"nciudad":nciudad,
+               		"npais":npais,
+               		"ndir":ndir,
+               		"npfax":npfax,
+               		"ntel":ntel,
+               		"ncelu":ncelu,
+               		"ncorreo":ncorreo,
+               		"ncorreo2":ncorreo2,
+               		"nrepl":nrepl,
+               		"ncc":ncc,
+               		"ntiporg":ntiporg,
+               		"ntcontrib":ntcontrib,
+               		"nresgran":nresgran,
+               		"nfecgran":nfecgran,
+               		"naret":naret,
+               		"nresauto":nresauto,
+               		"nfecauto":nfecauto,
+               		"niva":niva,
+               		"nica":nica,
+               		"tiva":tiva,
+               		"trica":trica,
+               		"trfte":trfte,
+               		"ncodac":ncodac,
+               		"ncodac2":ncodac2,
+               		"ncodac3":ncodac3,
+               		"nciiu":nciiu,
+               		"ntipoc":ntipoc,
+               		"ncuenta":ncuenta,
+               		"nentidad":nentidad,
+               		"nmailcontacto":nmailcontacto,
+               		"npcontacto":npcontacto,
+               		"ntipop":ntipop,
+               		"nfpago":nfpago,
+               		"ndprontop":ndprontop,
+               		"npobservaciones":npobservaciones					
+						},
+						success: function(response){
+							alert(response)
+						}
+            	})                           	
+        		}});
+   	 	});
+   
+</script>
+
+<?    
+ }
+?>

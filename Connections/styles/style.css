@@ -1,0 +1,29 @@
+html {min-width:1000px} 
+body {font-family:Verdana, Geneva, sans-serif;font-size:11px;line-height:1em;color:#000;min-width:1000px;border-top:5px solid #f2eddd}
+
+.header{
+	height:150px;
+	width:1250px;
+	background-image:url(../images/header.jpg);
+	background-repeat:repeat-x;
+	background-position:left;
+}
+
+.menu{
+	height:10px;
+	padding: 25px 25px 20px 0px;
+}
+.cuerpo{
+	width:1200px;
+	margin: 30px 0px 0px 30px;
+	vertical-align:top;
+}
+
+h2 span, h2 b {font-family:Verdana, Geneva, sans-serif; color:#EC1F24}
+
+.fright {padding-top:50px; float:left; margin-left:500px}
+.fright ul li {list-style-type:none;font-size:21px;line-height:1.2em;float:left;margin-left:1px}
+.fright ul li a {font-size:14px;display:block;color:#fff;text-decoration:none}
+.fright ul li a em {display:block}
+.fright ul li a b {display:block;font-style:normal;font-weight:normal;padding:5px 29px 5px 29px}
+.fright ul li a:hover, #header .row-1 .fright ul li a.active {background-color:#15B300}

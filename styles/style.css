@@ -1,0 +1,83 @@
+html {min-width:1080px} 
+body {font-family:Verdana, Geneva, sans-serif;font-size:11px;line-height:1em;color:#000;min-width:1000px;border-top:5px solid #f2eddd}
+object {vertical-align:top;outline:none}
+input, textarea, select {font-family:Verdana, Geneva, sans-serif;font-size:9px;vertical-align:middle;font-weight:normal}
+fieldset {border:0}
+p {line-height:1.57em;margin-bottom:20px; font-size:11px}
+.p0 {margin:0}
+a {color:#D19D01;outline:none; font-size:10px}
+a:hover {text-decoration:none}
+h3 {font-family:Verdana, Geneva, sans-serif;font-size:18px;line-height:1.2em;border-bottom:1px solid #dedbd3}
+h3 span, h3 b {font-family:Verdana, Geneva, sans-serif; color:#D19D01}
+h3 b {font-family:Verdana, Geneva, sans-serif; font-weight:normal}
+h2 {font-size:12px;line-height:1.2em;border-bottom:1px solid #dedbd3; font-weight:100}
+h2 span, h2 b {color:#D19D01}
+h2 b {font-weight:normal}
+h1 {font-size:10px;line-height:1.2em; font-weight:100; color:#C00}
+h4 {font-size:.86em;margin-bottom:5px}
+img {border:0;vertical-align:top;text-align:left}
+.cuerpo{
+	width:1000px;
+	margin: 0px 0px 0px 0px;
+	float:left;
+	vertical-align:top;
+}
+
+.cuerpo ul{list-style-type:none;}
+.cuerpo ul li{list-style-type:none;}
+.no-factura{
+    font-weight: bold;
+    color: red;
+    text-align: center;
+}
+
+.tabla-opciones{
+    border-collapse: collapse;
+    padding: 0;
+    width: 80%;
+}
+
+.tabla-opciones tr{
+    border-collapse: collapse;
+    padding: 0;
+}
+
+.tabla-opciones td{
+    border-collapse: collapse;
+    padding: 0;
+    vertical-align: top;
+    width: 18px;
+}
+
+.tabla-opciones div{
+    width: 18px;
+}
+
+.header{
+	height:135px;
+	width:1250px;
+	background-image:url(../images/LogoTop.jpg);
+	background-repeat:repeat-x;
+	background-position:left;
+}
+
+.menu{
+	height:10px;
+	padding: 25px 25px 20px 0px;
+}
+
+.fright {padding-top:25px; float:left; margin-left:300px}
+.fright ul li {list-style-type:none;font-size:21px;line-height:1.2em;float:left;margin-left:1px}
+.fright ul li a {font-size:14px;display:block;color:#fff;text-decoration:none}
+.fright ul li a em {display:block}
+.fright ul li a b {display:block;font-style:normal;font-weight:normal;padding:5px 29px 5px 29px}
+.fright ul li a:hover, #header .row-1 .fright ul li a.active {background-color:#D19D01}
+
+#formingreso ul{list-style-type:none;}
+#formingreso ul li{list-style-type:none;}
+
+.anulada{
+    color: red;
+    font-weight: bold;
+    font-size: large;
+}

@@ -1,0 +1,109 @@
+.imagen{
+    width:280px;
+    height:80px;
+}
+
+.detalle{
+    alignment-adjust:central;
+    margin-left:20px;
+    border:1px;
+    border-color: gray;
+}
+
+.detalle th{
+    background-color:#EC1F24;
+	color:#FFF;
+	font-weight:bold;
+	font-size:10px;
+	font-size-adjust:inherit;
+    width: 180px;
+}
+
+.detalle td{
+    font-size:10px;
+}
+
+.head{
+    width:100%;
+    alignment-adjust:central;
+}
+
+.head tr td div{
+    border-color:black;
+    border:1px;
+    font-weight: bolder;
+    border-radius:5px;
+    color:red;
+    padding-top:5px;
+    font-size:15px;
+    text-align:center;
+    height:20px;
+    width:120px;
+    margin-left: 310px;    
+}
+
+.head tr td p{
+    margin-top:30px;
+    margin-left:280px;
+    font-weight:bold;    
+}
+
+.contacto{
+    border-color:black;
+    border:1px;
+    border-radius:5px;
+    margin: 5px 5px 5px 5px;
+    padding: 5px 5px 5px 5px;
+    width: 180px;
+    height: 30px;
+}
+
+.valores{
+    border-color:black;
+    border:1px;
+    border-radius:5px;
+    margin: 5px 5px 5px 5px;
+    padding: 5px 5px 5px 5px;
+    width: 200px;
+    text-align: right;
+}
+
+.valores2{
+    text-align: right;
+}
+
+.fechas{
+    width:330px;
+    alignment-adjust:central;
+    margin-left:10px;
+}
+
+.titulo{
+    padding-left:40px;
+    font-weight: bold;
+}
+
+.tipof{
+    padding-left:15px;
+    padding-right:15px;
+}
+
+.tipofg{
+    padding-left:15px;
+    padding-right:15px;
+    background-color:silver;
+}
+.observacion{
+    border-color:black;
+    border:1px;
+    border-radius:5px;
+    margin: 5px 5px 5px 5px;
+    padding: 5px 5px 5px 5px;
+    width: 400px;
+    height: 80px;
+}
+
+.foot{
+    margin-left: 20px;
+    text-align:center;
+}

@@ -1,0 +1,39 @@
+/*td {
+	font-family:verdana,arial;
+	font-size:8.5px;
+}*/
+.estilotabla{
+	background-color:ffffff;
+	border-style:solid;
+	border-color:666666;
+	border-width:1px;
+}
+.estilocelda{
+	background-color:#EC1F24;
+	color:#FFF;
+	font-weight:bold;
+	font-size:10px;
+	font-size-adjust:inherit;
+}
+
+.estilocontenido{
+	font-weight:normal;
+	font-size:10px;
+	font-size-adjust:inherit;
+}
+.paginador{
+	font-size:9px;
+}
+
+.pg-normal {
+	color: black;
+	font-weight: normal;
+	text-decoration: none;    
+	cursor: pointer;    
+}
+.pg-selected {
+	color: black;
+	font-weight: bold;        
+	text-decoration: underline;
+	cursor: pointer;
+}

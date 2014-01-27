@@ -1,0 +1,11 @@
+.ordencompra{font-size:10px;}
+.ordencompra table{table-layout: fixed;width:100%;}
+.titulo{font-weight: bold;width:20%;}
+.detalle{width:30%;text-align: right;}
+.titulo_gen{font-weight: bold;width:15%;}
+.detalle_gen{text-align: right;width:18%;}
+.servicios{width:10%;text-align: right;}
+.servicios_detalle{width:50%;}
+.impuestos{width:15%;font-weight: bold;text-align: left;}
+.impuestos_detalle{width:18.3%;text-align: right;}
+.foot{font-size:10px;}

@@ -1,0 +1,1 @@
+<div>El Usuario Seleccionado ha sido Eliminado Exitosamente, se han removido todos los privilegios del usuario eliminado.</div>

@@ -1,0 +1,1 @@
+<p>Los Datos del Usuario seleccionado han sido actualizados satisfactoriamente, Si ha Cambiado el Grupo del Usuario, el usuario seleccionado ahora cuenta con nuevos privilegios</p>
